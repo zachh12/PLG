@@ -1,2 +1,4 @@
 CMakeFiles/*
 */CMakeFiles/*
+*.pdf
+build/
