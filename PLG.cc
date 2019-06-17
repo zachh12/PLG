@@ -7,11 +7,11 @@
 #include "G4OpticalPhysics.hh"
 #include "G4EmStandardPhysics_option4.hh"
 
-#include "HexLGDetectorConstruction.hh"
-#include "HexLGActionInitialization.hh"
+#include "HexLG/include/HexLGDetectorConstruction.hh"
+#include "HexLG/include/HexLGActionInitialization.hh"
 
-#include "QuLGDetectorConstruction.hh"
-#include "QuLGActionInitialization.hh"
+#include "QuLG/include/QuLGDetectorConstruction.hh"
+#include "QuLG/include/QuLGActionInitialization.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -23,18 +23,20 @@ int main(int argc, char** argv)
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = nullptr;
 
-  if (argc < 3) {printf("%s\n", "Syntax is ... macro, geometry (fix)")}
+  if (argc < 3) {printf("%s\n", "Syntax is ... macro, geometry (fix)"); }
   if (argc == 1) { ui = new G4UIExecutive(argc,argv); }
 
   G4RunManager * runManager = new G4RunManager;
 
+  //Need to make detector object abstract
+  det = NULL
   if (argv[argc - 1] == "HexLG") {
     HexLGDetectorConstruction* det = new HexLGDetectorConstruction();
   }
   else if (argv[argc - 1] == "QuLG") {
     QuLGDetectorConstruction* det = new QuLGDetectorConstruction();
   }
-  
+
   runManager->SetUserInitialization(det);
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT; //TODO Compare to PROSPECT's Physics List
@@ -54,7 +56,7 @@ int main(int argc, char** argv)
   physicsList->RegisterPhysics(opticalPhysics);
   runManager->SetUserInitialization(physicsList);
 
-  runManager->SetUserInitialization(new PLGActionInitialization(det));
+  runManager->SetUserInitialization(new HexLGActionInitialization(det));
 
   //initialize visualization
   G4VisManager* visManager = new G4VisExecutive;
