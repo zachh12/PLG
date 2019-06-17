@@ -4,6 +4,7 @@
 #include "SurfacesHelper.hh"
 #include "QuLGPMTSD.hh"
 #include "StringManip.hh"
+
 //#include "LXeScintSD.hh"
 //#include "LXeDetectorMessenger.hh"
 //#include "LXeMainVolume.hh"
@@ -58,8 +59,8 @@ QuLGDetectorConstruction::~QuLGDetectorConstruction() {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4VSolid* createOctagon(double height, double basesside_dia, double pmtside_dia, double wall_thick){
-
+//TODO link to over construction file
+G4VSolid* createOctagon1(double height, double basesside_dia, double pmtside_dia, double wall_thick){
     double z_points[2];
     z_points[0]=0;
     z_points[1]=-height;
@@ -358,7 +359,7 @@ G4VPhysicalVolume* QuLGDetectorConstruction::Construct(){
 
      //double reflector_z_offset = 0;
      //reflector = createOctagon(reflector_length,m_HexagoneRadius - box_side_wall_thick,reflector_pmtside_opening,3.303*mm);
-     reflector = createOctagon(reflector_length,dim[0]-2.*box_side_wall_thick,reflector_pmtside_opening,3.303*mm);
+     reflector = createOctagon1(reflector_length,dim[0]-2.*box_side_wall_thick,reflector_pmtside_opening,3.303*mm);
    
      //reflector = createTuncatedCone(reflector_length,m_HexagoneRadius - box_side_wall_thick,reflector_pmtside_opening,0.01*mm,oil_box, zero_array, m_HexagoneROuterOil);
      G4LogicalVolume* reflector_log = new G4LogicalVolume(reflector,Materials::Mylar,"reflector_log");
