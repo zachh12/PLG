@@ -20,69 +20,120 @@
 
 int main(int argc, char** argv)
 {
+
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = nullptr;
-
-  if (argc < 3) {printf("%s\n", "Syntax is ... macro, geometry (fix)"); }
   if (argc == 1) { ui = new G4UIExecutive(argc,argv); }
 
-  G4RunManager * runManager = new G4RunManager;
-
-  //Need to make detector object abstract
-  det = NULL
-  if (argv[argc - 1] == "HexLG") {
+  //Testing for cohesion
+  if (strcmp(argv[argc-1], "Hex") == 0) {
     HexLGDetectorConstruction* det = new HexLGDetectorConstruction();
+    G4RunManager * runManager = new G4RunManager;
+
+    //HexLGDetectorConstruction* det = new HexLGDetectorConstruction();
+    runManager->SetUserInitialization(det);
+
+    G4VModularPhysicsList* physicsList = new FTFP_BERT; //TODO Compare to PROSPECT's Physics List
+    physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
+    G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+    opticalPhysics->SetWLSTimeProfile("delta");
+
+    opticalPhysics->SetScintillationYieldFactor(1.0);
+    opticalPhysics->SetScintillationExcitationRatio(0.0);
+
+    opticalPhysics->SetMaxNumPhotonsPerStep(100);
+    opticalPhysics->SetMaxBetaChangePerStep(10.0);
+
+    opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
+    opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
+
+    physicsList->RegisterPhysics(opticalPhysics);
+    runManager->SetUserInitialization(physicsList);
+
+    runManager->SetUserInitialization(new HexLGActionInitialization(det));
+
+    //initialize visualization
+    G4VisManager* visManager = new G4VisExecutive;
+    visManager->Initialize();
+
+    //get the pointer to the User Interface manager 
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+
+    if (ui) {
+      //interactive mode
+      UImanager->ApplyCommand("/control/execute vis.mac");
+      //if (ui->IsGUI()) {
+      //  UImanager->ApplyCommand("/control/execute gui.mac");
+      //}
+      ui->SessionStart();
+      delete ui;
+    } else {
+      //batch mode  
+      G4String command = "/control/execute ";
+      G4String fileName = argv[1];
+      UImanager->ApplyCommand(command+fileName);
+    }
+
+    // job termination
+    delete visManager;
+    delete runManager;
+    return 0;
   }
-  else if (argv[argc - 1] == "QuLG") {
+  else if (strcmp(argv[argc-1], "Qu") == 0) {
+    printf("%s\n", "Square");
     QuLGDetectorConstruction* det = new QuLGDetectorConstruction();
+    G4RunManager * runManager = new G4RunManager;
+
+    //HexLGDetectorConstruction* det = new HexLGDetectorConstruction();
+    runManager->SetUserInitialization(det);
+
+    G4VModularPhysicsList* physicsList = new FTFP_BERT; //TODO Compare to PROSPECT's Physics List
+    physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
+    G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+    opticalPhysics->SetWLSTimeProfile("delta");
+
+    opticalPhysics->SetScintillationYieldFactor(1.0);
+    opticalPhysics->SetScintillationExcitationRatio(0.0);
+
+    opticalPhysics->SetMaxNumPhotonsPerStep(100);
+    opticalPhysics->SetMaxBetaChangePerStep(10.0);
+
+    opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
+    opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
+
+    physicsList->RegisterPhysics(opticalPhysics);
+    runManager->SetUserInitialization(physicsList);
+
+    runManager->SetUserInitialization(new QuLGActionInitialization(det));
+
+    //initialize visualization
+    G4VisManager* visManager = new G4VisExecutive;
+    visManager->Initialize();
+
+    //get the pointer to the User Interface manager 
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+
+    if (ui) {
+      //interactive mode
+      UImanager->ApplyCommand("/control/execute vis.mac");
+      //if (ui->IsGUI()) {
+      //  UImanager->ApplyCommand("/control/execute gui.mac");
+      //}
+      ui->SessionStart();
+      delete ui;
+    } else {
+      //batch mode  
+      G4String command = "/control/execute ";
+      G4String fileName = argv[1];
+      UImanager->ApplyCommand(command+fileName);
+    }
+
+    // job termination
+    delete visManager;
+    delete runManager;
+    return 0;
   }
-
-  runManager->SetUserInitialization(det);
-
-  G4VModularPhysicsList* physicsList = new FTFP_BERT; //TODO Compare to PROSPECT's Physics List
-  physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
-  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
-  opticalPhysics->SetWLSTimeProfile("delta");
-
-  opticalPhysics->SetScintillationYieldFactor(1.0);
-  opticalPhysics->SetScintillationExcitationRatio(0.0);
-
-  opticalPhysics->SetMaxNumPhotonsPerStep(100);
-  opticalPhysics->SetMaxBetaChangePerStep(10.0);
-
-  opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
-  opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
-
-  physicsList->RegisterPhysics(opticalPhysics);
-  runManager->SetUserInitialization(physicsList);
-
-  runManager->SetUserInitialization(new HexLGActionInitialization(det));
-
-  //initialize visualization
-  G4VisManager* visManager = new G4VisExecutive;
-  visManager->Initialize();
-
-  //get the pointer to the User Interface manager 
-  G4UImanager* UImanager = G4UImanager::GetUIpointer();
-
-  if (ui) {
-    //interactive mode
-    UImanager->ApplyCommand("/control/execute vis.mac");
-    //if (ui->IsGUI()) {
-    //  UImanager->ApplyCommand("/control/execute gui.mac");
-    //}
-    ui->SessionStart();
-    delete ui;
-  } else {
-    //batch mode  
-    G4String command = "/control/execute ";
-    G4String fileName = argv[1];
-    UImanager->ApplyCommand(command+fileName);
-  }
-
-  // job termination
-  delete visManager;
-  delete runManager;
+  
   return 0;
 }
 

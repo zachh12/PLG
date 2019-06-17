@@ -31,15 +31,15 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(HexLG HexLG.cc ${sources} ${headers})
-target_link_libraries(HexLG ${Geant4_LIBRARIES} )
+add_executable(PLG PLG.cc ${sources} ${headers})
+target_link_libraries(PLG ${Geant4_LIBRARIES} )
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build LXe. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(HexLG_SCRIPTS
+set(PLG_SCRIPTS
     vis.mac
    )
 
@@ -54,7 +54,7 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS HexLG DESTINATION bin)
+install(TARGETS PLG DESTINATION bin)
 
 set(
   vis.mac
