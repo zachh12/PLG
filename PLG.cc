@@ -84,7 +84,6 @@ int main(int argc, char** argv)
     QuLGDetectorConstruction* det = new QuLGDetectorConstruction();
     G4RunManager * runManager = new G4RunManager;
 
-    //HexLGDetectorConstruction* det = new HexLGDetectorConstruction();
     runManager->SetUserInitialization(det);
 
     G4VModularPhysicsList* physicsList = new FTFP_BERT; //TODO Compare to PROSPECT's Physics List
