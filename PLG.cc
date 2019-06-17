@@ -79,8 +79,7 @@ int main(int argc, char** argv)
     delete runManager;
     return 0;
   }
-  else if (strcmp(argv[argc-1], "Qu") == 0) {
-    printf("%s\n", "Square");
+  else if (strcmp(argv[argc-1], "Sq") == 0) {
     QuLGDetectorConstruction* det = new QuLGDetectorConstruction();
     G4RunManager * runManager = new G4RunManager;
 
@@ -131,6 +130,10 @@ int main(int argc, char** argv)
     delete visManager;
     delete runManager;
     return 0;
+  }
+  else {
+    printf("%s\n", "Valid syntax: ./PLG example.mac geometry");
+    printf("%s\n", "Valid Geometries: Hex, Sq");
   }
 
   return 0;
